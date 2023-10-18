@@ -39,9 +39,9 @@
           },
           "source": {
             "type": "PlatformImage",
-            "publisher": "microsoftwindowsserver",
-            "offer": "windowsserverhotpatch-previews",
-            "sku": "windows-server-2022-azure-edition-hotpatch",
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2022-datacenter-g2",
             "version": "latest"
           },
           "customize": [
