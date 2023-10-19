@@ -1,5 +1,5 @@
 #region daemon change for docker
-& $Env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchDaemon
+ &$Env:ProgramFiles\\Docker\\Docker\\DockerCli.exe -SwitchWindowsEngine
 #endregion
 
 # Fix for first login delays due to Windows Module Installer
