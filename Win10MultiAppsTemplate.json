@@ -31,7 +31,7 @@
         }
       },
       "properties": {
-        "buildTimeoutInMinutes": 30,
+        "buildTimeoutInMinutes": 100,
         "vmProfile": {
           "vmSize": "Standard_E2bs_v5",
           "osDiskSizeGB": 127
