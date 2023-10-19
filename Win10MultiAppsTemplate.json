@@ -52,9 +52,7 @@
           },
           {
             "type": "WindowsRestart",
-            "restartCheckCommand": "",
-            "restartCommand": "",
-            "restartTimeout": ""
+            "restartCommand": "shutdown.exe /r /t 0"
           },
           {
             "type": "PowerShell",
