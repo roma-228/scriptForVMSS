@@ -51,7 +51,10 @@
             "scriptUri": "<URI to PowerShell Script>"
           },
           {
-            "type": "windows-restart"
+            "type": "WindowsRestart",
+            "restartCheckCommand": "",
+            "restartCommand": "",
+            "restartTimeout": ""
           },
           {
             "type": "PowerShell",
