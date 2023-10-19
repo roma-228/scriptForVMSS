@@ -49,7 +49,16 @@
             "runElevated": true,
             "name": "RunPoShInstall",
             "scriptUri": "<URI to PowerShell Script>"
+          },
+          {
+            "type": "windows-restart"
           }
+          {
+            "type": "PowerShell",
+            "runElevated": true,
+            "name": "RunPoShInstall",
+            "scriptUri": "<URI to PowerShell Script daemon change for docker>"
+          },
         ],
         "distribute": [
           {
