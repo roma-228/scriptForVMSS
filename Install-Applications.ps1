@@ -15,7 +15,7 @@ choco install git --force --params "/NoAutoCrlf"
 #endregion
 
 #region DockerDesktop
-cd C:\Temp
-wget https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe -O "Docker Desktop Installer.exe"
-Start-Process -Wait -NoNewWindow -FilePath ".\Docker Desktop Installer.exe" -ArgumentList "install --backend=hyper-v --quiet --accept-license " -ErrorAction Stop;
+#cd C:\Temp
+#wget https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe -O "Docker Desktop Installer.exe"
+Start-Process -Wait -NoNewWindow -FilePath "c:\temp\Docker Desktop Installer.exe" -ArgumentList "install --backend=hyper-v --quiet --accept-license " -ErrorAction Stop;
 #endregion
