@@ -49,7 +49,8 @@
             "name": "GetAzCopy",
             "inline": [
               "New-Item -Type Directory -Path 'c:\\' -Name temp",
-              "invoke-webrequest -uri 'https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe' -OutFile 'c:\\temp\\Docker Desktop Installer.exe'"
+              "invoke-webrequest -uri 'https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe' -OutFile 'c:\\temp\\Docker Desktop Installer.exe'",
+              "Write-Host 'File uploaded successfully!'"
             ]
           },
           {
