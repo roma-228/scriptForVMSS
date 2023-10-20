@@ -13,9 +13,11 @@ docker version
 #endregion
 
 #region adding docker to startup folder
+$pathtostartup = "$HOME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\DockerDesktop.lnk"
+$pathtodocker = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 $WshShell = New-Object -comObject WScript.Shell
-$Shortcut = $WshShell.CreateShortcut("$HOME\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\DockerDesktop.lnk")
-$Shortcut.TargetPath = "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe"
+$Shortcut = $WshShell.CreateShortcut($pathtostartup)
+$Shortcut.TargetPath = $pathtodocker
 $Shortcut.Save()
 #endregion
 
