@@ -1,12 +1,22 @@
 #region daemon change for docker
 Write-Host 'start process reload!'
 Write-Host 'start swith deamon docker!'
+
 docker version
+
 Start-Process -FilePath "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe"
-# Чекаємо 5 хвилин, щоб Docker повністю запустився
 Start-Sleep -Seconds 300
+
 & $Env:ProgramFiles\\Docker\\Docker\\DockerCli.exe -SwitchWindowsEngine
+
 docker version
+#endregion
+
+#region adding docker to startup folder
+$WshShell = New-Object -comObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$HOME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\Docker Desktop.lnk")
+$Shortcut.TargetPath = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+$Shortcut.Save()
 #endregion
 
 # Fix for first login delays due to Windows Module Installer
