@@ -2,7 +2,11 @@
 Write-Host 'start process reload!'
 Write-Host 'start swith deamon docker!'
 docker version
-&$Env:ProgramFiles\\Docker\\Docker\\DockerCli.exe -SwitchWindowsEngine
+Start-Process -FilePath "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe"
+# Чекаємо 5 хвилин, щоб Docker повністю запустився
+Start-Sleep -Seconds 300
+& $Env:ProgramFiles\\Docker\\Docker\\DockerCli.exe -SwitchWindowsEngine
+docker version
 #endregion
 
 # Fix for first login delays due to Windows Module Installer
