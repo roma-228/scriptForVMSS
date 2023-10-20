@@ -41,6 +41,8 @@ cd Programs
 ls 
 Write-Host 'folder Programs!'
 
+mkdir Startup
+
 cd Startup
 ls 
 Write-Host 'folder Startup!'
@@ -49,8 +51,6 @@ $pathtostartuptest = "$HOME\AppData\Roaming\Microsoft\Windows\Start Menu\Program
 if ((Test-Path $pathtostartuptest)) {
     Write-Host 'folder startup!'
 }
-cd "$HOME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
-pwd
 $pathtostartup = "$HOME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\DockerDesktop.lnk"
 $pathtodocker = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 $WshShell = New-Object -comObject WScript.Shell
