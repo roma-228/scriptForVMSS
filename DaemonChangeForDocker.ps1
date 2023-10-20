@@ -13,6 +13,44 @@ docker version
 #endregion
 
 #region adding docker to startup folder
+cd $HOME
+ls
+Write-Host 'folder $HOME!'
+
+cd AppData
+ls 
+Write-Host 'folder AppData!'
+
+cd Roaming
+ls 
+Write-Host 'folder Roaming!'
+
+cd Microsoft
+ls 
+Write-Host 'folder Microsoft!'
+
+cd Windows
+ls 
+Write-Host 'folder Windows!'
+
+cd '.\Start Menu\'
+ls 
+Write-Host 'folder Start Menu!'
+
+cd Programs
+ls 
+Write-Host 'folder Programs!'
+
+cd Startup
+ls 
+Write-Host 'folder Startup!'
+
+$pathtostartuptest = "$HOME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
+if ((Test-Path $pathtostartuptest)) {
+    Write-Host 'folder startup!'
+}
+cd "$HOME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
+pwd
 $pathtostartup = "$HOME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\DockerDesktop.lnk"
 $pathtodocker = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 $WshShell = New-Object -comObject WScript.Shell
