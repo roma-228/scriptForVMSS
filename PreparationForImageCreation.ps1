@@ -8,7 +8,7 @@ Get-AzResourceProvider -ProviderNamespace Microsoft.Compute, Microsoft.KeyVault,
     Register-AzResourceProvider
 
 
-$imageResourceGroup = 'creatingTemplateImagestest'
+$imageResourceGroup = 'creatingTemplateImages'
 $location = 'WestEurope'
 $subscriptionID = (Get-AzContext).Subscription.Id
 
