@@ -9,6 +9,9 @@ Start-Sleep -Seconds 300
 & $Env:ProgramFiles\\Docker\\Docker\\DockerCli.exe -SwitchWindowsEngine
 
 docker version
+
+Set-Service -Name com.docker.service -StartupType Automatic
+Write-Host 'start docker servise!'
 #endregio
 
 # Fix for first login delays due to Windows Module Installer
