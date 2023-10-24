@@ -6,7 +6,7 @@ $DockerPath = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 $StartupPath = [Environment]::GetFolderPath("Startup")
 
 $WshShell = New-Object -ComObject WScript.Shell
-$Shortcut = $WshShell.CreateShortcut("$StartupPath\Docker Desktop.lnk")
+$Shortcut = $WshShell.CreateShortcut("$StartupPath\Docker Desktop111.lnk")
 $Shortcut.TargetPath = $DockerPath
 $Shortcut.Save()
 
