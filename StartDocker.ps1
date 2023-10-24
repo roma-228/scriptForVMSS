@@ -1,4 +1,12 @@
 Start-Process -FilePath "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe"
-Start-Sleep -Seconds 150
 & $Env:ProgramFiles\\Docker\\Docker\\DockerCli.exe -SwitchWindowsEngine
-Set-Service -Name com.docker.service -StartupType Automatic
+
+$DockerPath = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+
+$StartupPath = [Environment]::GetFolderPath("Startup")
+
+$WshShell = New-Object -ComObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$StartupPath\Docker Desktop.lnk")
+$Shortcut.TargetPath = $DockerPath
+$Shortcut.Save()
+
