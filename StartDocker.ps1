@@ -6,7 +6,7 @@ Start-Process -FilePath "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe"
 
 $DockerPath = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 
-$StartupPath = "$HOME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\DockerDesktop.lnk"
+$StartupPath = "C:\Users\vmadmin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
 echo $DockerPath > "C:\Program Files\output.txt"
 echo $StartupPath >> "C:\Program Files\output.txt"
 $WshShell = New-Object -ComObject WScript.Shell
