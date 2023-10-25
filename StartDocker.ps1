@@ -4,7 +4,7 @@ $Password = ConvertTo-SecureString 'Davidovc00375237' -AsPlainText -Force
 $Credential = New-Object System.Management.Automation.PSCredential($Username, $Password)
 $FilePath = "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe"
 Start-Process -FilePath $FilePath -Credential $Credential
-
+& $Env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchWindowsEngine -Credential $Credential
 
 
 
