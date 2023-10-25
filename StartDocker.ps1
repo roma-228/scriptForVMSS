@@ -1,4 +1,12 @@
 Add-LocalGroupMember -Group "docker-users" -Member "NT AUTHORITY\SYSTEM"
+$Username = 'vmadmin'
+$Password = ConvertTo-SecureString 'Davidovc00375237' -AsPlainText -Force
+$Credential = New-Object System.Management.Automation.PSCredential($Username, $Password)
+$FilePath = "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe"
+Start-Process -FilePath $FilePath -Credential $Credential
+
+
+
 
 $Action = New-ScheduledTaskAction -Execute 'PowerShell.exe' -Argument "-Command {Start-Process -FilePath 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe'; & '$Env:ProgramFiles\\Docker\\Docker\\DockerCli.exe' -SwitchWindowsEngine}"
 $Trigger = New-ScheduledTaskTrigger -AtLogOn
