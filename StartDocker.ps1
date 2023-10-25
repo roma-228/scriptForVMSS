@@ -1,8 +1,7 @@
 Add-LocalGroupMember -Group "docker-users" -Member "NT AUTHORITY\SYSTEM"
 
-
 Start-Process -FilePath "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe"
-
+Start-Sleep -Seconds 300
 & $Env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchWindowsEngine
 & C:'\Program Files\'Docker\Docker\DockerCli.exe -SwitchWindowsEngine
 $DockerPath = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
@@ -13,8 +12,5 @@ echo $StartupPath >> "C:\Program Files\output.txt"
 whoami | Out-File -FilePath "C:\Program Files\output.txt"
 echo $Env:ProgramFiles\Docker\Docker\DockerCli.exe >> "C:\Program Files\output.txt"
 docker version >> "C:\Program Files\output.txt"
-$WshShell = New-Object -ComObject WScript.Shell
-$Shortcut = $WshShell.CreateShortcut($StartupPath)
-$Shortcut.TargetPath = $DockerPath
-$Shortcut.Save()
+
 
