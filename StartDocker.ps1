@@ -1,10 +1,13 @@
 Add-LocalGroupMember -Group "docker-users" -Member "NT AUTHORITY\SYSTEM"
 
+$Action = New-ScheduledTaskAction -Execute 'PowerShell.exe' -Argument "-Command {Start-Process -FilePath 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe'; & '$Env:ProgramFiles\\Docker\\Docker\\DockerCli.exe' -SwitchWindowsEngine}"
+$Trigger = New-ScheduledTaskTrigger -AtLogOn
+$Principal = New-ScheduledTaskPrincipal -UserId "AzDevOps" -LogonType Interactive
+Register-ScheduledTask -Action $Action -Trigger $Trigger -TaskName "Run Docker Desktop" -Description "Start Docker Desktop for AzDevOps" -Principal $Principal
+
+
 Start-Process -FilePath "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe"
-C:'\Program Files\'Docker\Docker'\Docker Desktop.exe'
-Start-Sleep -Seconds 150
 & $Env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchWindowsEngine
-& C:'\Program Files\'Docker\Docker\DockerCli.exe -SwitchWindowsEngine
 $DockerPath = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 
 $StartupPath = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\DockerDesctop.lnk"
