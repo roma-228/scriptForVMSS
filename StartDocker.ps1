@@ -1,6 +1,6 @@
 Add-LocalGroupMember -Group "docker-users" -Member "NT AUTHORITY\SYSTEM"
 
-start-service -Name com.docker.service
+
 start "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 
 & $Env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchWindowsEngine
