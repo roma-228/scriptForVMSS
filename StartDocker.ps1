@@ -1,7 +1,7 @@
 Add-LocalGroupMember -Group "docker-users" -Member "NT AUTHORITY\SYSTEM"
 
 
-start "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+Start-Process -FilePath "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe"
 
 & $Env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchWindowsEngine
 & C:'\Program Files\'Docker\Docker\DockerCli.exe -SwitchWindowsEngine
