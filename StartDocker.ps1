@@ -7,8 +7,8 @@ Start-Process -FilePath "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe"
 $DockerPath = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 
 $StartupPath = [Environment]::GetFolderPath("Startup")
-echo $DockerPath
-echo $StartupPath
+echo $DockerPath > "C:\Program Files\output.txt"
+echo $StartupPath >> "C:\Program Files\output.txt"
 $WshShell = New-Object -ComObject WScript.Shell
 $Shortcut = $WshShell.CreateShortcut("$StartupPath\Docker Desktop.lnk")
 $Shortcut.TargetPath = $DockerPath
