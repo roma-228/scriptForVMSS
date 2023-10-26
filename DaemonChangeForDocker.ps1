@@ -3,14 +3,6 @@ Write-Host 'start swith deamon docker!'
 
 docker version
 
-Start-Process -FilePath "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe"
-Start-Sleep -Seconds 450
-
-& $Env:ProgramFiles\\Docker\\Docker\\DockerCli.exe -SwitchWindowsEngine
-
-docker version
-
-Set-Service -Name com.docker.service -StartupType Automatic
 Write-Host 'start docker servise!'
 #endregio
 
