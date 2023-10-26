@@ -15,6 +15,7 @@ choco install git --force --params "/NoAutoCrlf"
 #endregion
 
 #region DockerDesktop
+Write-Host "start install docker"
 Param(
     [string] $envScope = "User",
     [string] $dataRoot = 'C:\ProgramData\Docker'
