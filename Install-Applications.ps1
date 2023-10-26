@@ -76,21 +76,7 @@ Invoke-WebRequest -UseBasicParsing -Uri $latestZipFileUrl -OutFile $tempFile
 Expand-Archive $tempFile -DestinationPath $env:ProgramFiles -Force
 Remove-Item $tempFile -Force
 
-$path = [System.Environment]::GetEnvironmentVariable("Path", $envScope)
-if (";$path;" -notlike "*;$($env:ProgramFiles)\docker;*") {
-    [Environment]::SetEnvironmentVariable("Path", "$path;$env:ProgramFiles\docker", $envScope)
-}
-
-# Register service if necessary
-if (-not $dockerService) {
-    $dockerdExe = 'C:\Program Files\docker\dockerd.exe'
-    & $dockerdExe --register-service --data-root $dataRoot
-}
-
 New-Item $dataRoot -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
 Remove-Item (Join-Path $dataRoot 'panic.log') -Force -ErrorAction SilentlyContinue | Out-Null
 New-Item (Join-Path $dataRoot 'panic.log') -ItemType File -ErrorAction SilentlyContinue | Out-Null
 Write-Host "finish docker install"
-Start-Sleep -Seconds 60
-Write-Host "finish 60 second"
-
