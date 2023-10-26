@@ -95,9 +95,5 @@ New-Item $dataRoot -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
 Remove-Item (Join-Path $dataRoot 'panic.log') -Force -ErrorAction SilentlyContinue | Out-Null
 New-Item (Join-Path $dataRoot 'panic.log') -ItemType File -ErrorAction SilentlyContinue | Out-Null
 
-[Environment]::SetEnvironmentVariable("docker", "C:\Program Files\docker\docker.exe", "Machine")
-$envPath = [Environment]::GetEnvironmentVariable("Path", "Machine")
-$newPath = $envPath + ";C:\Program Files\docker"
-[Environment]::SetEnvironmentVariable("Path", $newPath, "Machine")
 
 #endregion
