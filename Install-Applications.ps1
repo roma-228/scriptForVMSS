@@ -15,102 +15,82 @@ choco install git --force --params "/NoAutoCrlf"
 #endregion
 
 #region DockerDesktop
-function Start-DownloadWithRetry
-{
-    Param
-    (
-        [Parameter(Mandatory)]
-        [string] $Url,
-        [string] $Name,
-        [string] $DownloadPath = "${env:Temp}",
-        [int] $Retries = 20
-    )
+$envScope = "User"
+$dataRoot = 'C:\ProgramData\Docker'
 
-    if ([String]::IsNullOrEmpty($Name)) {
-        $Name = [IO.Path]::GetFileName($Url)
+$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    throw "This script needs to run as admin"
+}
+
+if ((Test-Path (Join-Path $env:ProgramFiles "Docker Desktop")) -or (Test-Path (Join-Path $env:ProgramFiles "DockerDesktop"))) {
+    throw "Docker Desktop is installed on this Computer, cannot run this script"
+}
+
+# Install Windows feature containers
+$restartNeeded = $false
+if (!(Get-WindowsOptionalFeature -FeatureName containers -Online).State -eq 'Enabled') {
+    $restartNeeded = (Enable-WindowsOptionalFeature -FeatureName containers -Online -NoRestart).RestartNeeded
+    if ($restartNeeded) {
+        Write-Host "A restart is needed before you can start the docker service after installation"
     }
+}
 
-    $filePath = Join-Path -Path $DownloadPath -ChildPath $Name
-    $downloadStartTime = Get-Date
+# Get Latest Stable version and URL
+$latestZipFile = (Invoke-WebRequest -UseBasicParsing -uri "https://download.docker.com/win/static/stable/x86_64/").Content.replace("`r",'').split("`n") | 
+                 Where-Object { $_ -like "<a href=""docker-*"">docker-*" } | 
+                 ForEach-Object { $zipName = $_.Split('"')[1]; [Version]($zipName.SubString(7,$zipName.Length-11).Split('-')[0]) } | 
+                 Sort-Object | Select-Object -Last 1 | ForEach-Object { "docker-$_.zip" }
 
-    # Default retry logic for the package.
-    while ($Retries -gt 0)
-    {
-        try
-        {
-            $downloadAttemptStartTime = Get-Date
-            Write-Host "Downloading package from: $Url to path $filePath ."
-            (New-Object System.Net.WebClient).DownloadFile($Url, $filePath)
-            break
+if (-not $latestZipFile) {
+    throw "Unable to locate latest stable docker download"
+}
+$latestZipFileUrl = "https://download.docker.com/win/static/stable/x86_64/$latestZipFile"
+$latestVersion = [Version]($latestZipFile.SubString(7,$latestZipFile.Length-11))
+Write-Host "Latest stable available Docker Engine version is $latestVersion"
+
+# Check existing docker version
+$dockerService = get-service docker -ErrorAction SilentlyContinue
+if ($dockerService) {
+    if ($dockerService.Status -eq "Running") {
+        $dockerVersion = [Version](docker version -f "{{.Server.Version}}")
+        Write-Host "Current installed Docker Engine version $dockerVersion"
+        if ($latestVersion -le $dockerVersion) {
+            Write-Host "No new Docker Engine available"
+            Return
         }
-        catch
-        {
-            $failTime = [math]::Round(($(Get-Date) - $downloadStartTime).TotalSeconds, 2)
-            $attemptTime = [math]::Round(($(Get-Date) - $downloadAttemptStartTime).TotalSeconds, 2)
-            Write-Host "There is an error encounterd after $attemptTime seconds during package downloading:`n $_"
-            $Retries--
-
-            if ($Retries -eq 0)
-            {
-                Write-Host "File can't be downloaded. Please try later or check that file exists by url: $Url"
-                Write-Host "Total time elapsed $failTime"
-                exit 1
-            }
-
-            Write-Host "Waiting 30 seconds before retrying. Retries left: $Retries"
-            Start-Sleep -Seconds 30
-        }
+        Write-Host "New Docker Engine available"
     }
-
-    $downloadCompleteTime = [math]::Round(($(Get-Date) - $downloadStartTime).TotalSeconds, 2)
-    Write-Host "Package downloaded successfully in $downloadCompleteTime seconds"
-    return $filePath
-}
-#endregion
-Function Get-DockerWincredHash
-{
- Param (
-    [Parameter(Mandatory = $True)]
-    [string] $Release
-)
-
- $hashURL = "https://github.com/docker/docker-credential-helpers/releases/download/${Release}/checksums.txt "
- (Invoke-RestMethod -Uri $hashURL).ToString().Split("`n").Where({ $_ -ilike "*docker-credential-wincred-${Release}.windows-amd64.exe*" }).Split(' ')[0]
-
-}
-#endregion
-
-Write-Host "Get latest Moby release"
-$mobyLatestReleaseVersion = (Invoke-RestMethod -Uri "https://api.github.com/repos/moby/moby/releases/latest").tag_name.Trim("v")
-$dockerceUrl = "https://download.docker.com/win/static/stable/x86_64/"
-$dockerceBinaries = Invoke-WebRequest -Uri $dockerceUrl -UseBasicParsing
-
-Write-Host "Check Moby version $mobyLatestReleaseVersion"
-$mobyRelease = $dockerceBinaries.Links.href -match "${mobyLatestReleaseVersion}\.zip" | Select-Object -Last 1
-if (-not $mobyRelease) {
-    Write-Host "Release not found for $mobyLatestRelease version"
-    $versions = [regex]::Matches($dockerceBinaries.Links.href, "docker-(\d+\.\d+\.\d+)\.zip") | Sort-Object { [version]$_.Groups[1].Value }
-    $mobyRelease = $versions | Select-Object -ExpandProperty Value -Last 1
-    Write-Host "Found $mobyRelease"
-}
-$mobyReleaseUrl = $dockerceUrl + $mobyRelease
-
-Write-Host "Install Moby $mobyRelease..."
-$mobyArchivePath = Start-DownloadWithRetry -Url $mobyReleaseUrl -Name $mobyRelease
-Expand-Archive -Path $mobyArchivePath -DestinationPath $env:TEMP
-$dockerPath = "$env:TEMP\docker\docker.exe"
-$dockerdPath = "$env:TEMP\docker\dockerd.exe"
-
-Write-Host "Install Docker CE"
-$instScriptUrl = "https://raw.githubusercontent.com/microsoft/Windows-Containers/Main/helpful_tools/Install-DockerCE/install-docker-ce.ps1"
-$instScriptPath = Start-DownloadWithRetry -Url $instScriptUrl -Name "install-docker-ce.ps1"
-& $instScriptPath -DockerPath $dockerPath -DockerDPath $dockerdPath
-if ($LastExitCode -ne 0) {
-    Write-Host "Docker installation failed with exit code $LastExitCode"
-    exit $exitCode
+    else {
+        Write-Host "Docker Service not running"
+    }
 }
 
-# Fix AZ CLI DOCKER_COMMAND_ERROR
-# cli.azure.cli.command_modules.acr.custom: Could not run 'docker.exe' command.
-# https://github.com/Azure/azure-cli/issues/18766
-New-Item -ItemType SymbolicLink -Path "C:\Windows\SysWOW64\docker.exe" -Target "C:\Windows\System32\docker.exe"
+if ($dockerService) {
+    Stop-Service docker
+}
+
+# Download new version
+$tempFile = "$([System.IO.Path]::GetTempFileName()).zip"
+Invoke-WebRequest -UseBasicParsing -Uri $latestZipFileUrl -OutFile $tempFile
+Expand-Archive $tempFile -DestinationPath $env:ProgramFiles -Force
+Remove-Item $tempFile -Force
+
+$path = [System.Environment]::GetEnvironmentVariable("Path", $envScope)
+if (";$path;" -notlike "*;$($env:ProgramFiles)\docker;*") {
+    [Environment]::SetEnvironmentVariable("Path", "$path;$env:ProgramFiles\docker", $envScope)
+}
+
+# Register service if necessary
+if (-not $dockerService) {
+    $dockerdExe = 'C:\Program Files\docker\dockerd.exe'
+    & $dockerdExe --register-service --data-root $dataRoot
+}
+
+New-Item $dataRoot -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
+Remove-Item (Join-Path $dataRoot 'panic.log') -Force -ErrorAction SilentlyContinue | Out-Null
+New-Item (Join-Path $dataRoot 'panic.log') -ItemType File -ErrorAction SilentlyContinue | Out-Null
+Write-Host "finish docker install"
+Start-Sleep -Seconds 60
+Write-Host "finish 60 second"
+
