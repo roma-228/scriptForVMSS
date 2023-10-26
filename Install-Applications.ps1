@@ -96,4 +96,5 @@ if (-not $dockerService) {
 New-Item $dataRoot -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
 Remove-Item (Join-Path $dataRoot 'panic.log') -Force -ErrorAction SilentlyContinue | Out-Null
 New-Item (Join-Path $dataRoot 'panic.log') -ItemType File -ErrorAction SilentlyContinue | Out-Null
+Write-Host 'stop install docker'
 #endregion
