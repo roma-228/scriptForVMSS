@@ -76,6 +76,12 @@ Invoke-WebRequest -UseBasicParsing -Uri $latestZipFileUrl -OutFile $tempFile
 Expand-Archive $tempFile -DestinationPath $env:ProgramFiles -Force
 Remove-Item $tempFile -Force
 
+# Register service if necessary
+if (-not $dockerService) {
+    $dockerdExe = 'C:\Program Files\docker\dockerd.exe'
+    & $dockerdExe --register-service --data-root $dataRoot
+}
+
 New-Item $dataRoot -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
 Remove-Item (Join-Path $dataRoot 'panic.log') -Force -ErrorAction SilentlyContinue | Out-Null
 New-Item (Join-Path $dataRoot 'panic.log') -ItemType File -ErrorAction SilentlyContinue | Out-Null
